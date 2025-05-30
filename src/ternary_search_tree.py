@@ -39,3 +39,16 @@ class TreeNode:
     @children.setter
     def children(self, children: TreeNodeChildren):
         self._children = children
+
+
+class TernarySearchTree:
+    def __init__(self, root: TreeNode | None = None) -> None:
+        self.root = root
+
+    @property
+    def root(self) -> TreeNode | None:
+        return self._root
+
+    @root.setter
+    def root(self, node: TreeNode | None):
+        self._root = node
