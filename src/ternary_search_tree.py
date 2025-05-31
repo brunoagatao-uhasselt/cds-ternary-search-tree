@@ -53,6 +53,29 @@ class TernarySearchTree:
     def root(self, node: TreeNode | None):
         self._root = node
 
+    def __len__(self) -> int:
+        """
+        Calculates the number of complete strings stored in the ternary search
+        tree.
+
+        A string is considered stored if it terminates at a node marked as a
+        terminal node.
+
+        Returns:
+            int: the number of distinct strings stored in the tree.
+        """
+        def count(node: TreeNode | None):
+            if node is None:
+                return 0
+
+            total = int(node.terminates)
+            total += count(node.children.less_than)
+            total += count(node.children.equals)
+            total += count(node.children.larger_than)
+            return total
+
+        return count(self.root)
+
     def insert(self, term: str) -> bool:
         """
         Inserts a string into the ternary search tree.
