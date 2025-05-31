@@ -39,3 +39,71 @@ class TreeNode:
     @children.setter
     def children(self, children: TreeNodeChildren):
         self._children = children
+
+
+class TernarySearchTree:
+    def __init__(self, root: TreeNode | None = None) -> None:
+        self.root = root
+
+    @property
+    def root(self) -> TreeNode | None:
+        return self._root
+
+    @root.setter
+    def root(self, node: TreeNode | None):
+        self._root = node
+
+    def insert(self, term: str) -> bool:
+        """
+        Inserts a string into the ternary search tree.
+
+        All strings, including the empty string, are allowed.
+
+        Args:
+            term (str): the string to insert into the tree.
+
+        Returns:
+            bool: True if the string was inserted successfully, False
+            otherwise.
+        """
+        def _insert(node, term, index):
+            if term == "":
+                character = ""
+            else:
+                character = term[index]
+
+            if node is None:
+                node = TreeNode(character)
+
+            if character < node.character:
+                node.children.less_than = _insert(
+                    node.children.less_than,
+                    term,
+                    index
+                )
+
+            elif character > node.character:
+                node.children.larger_than = _insert(
+                    node.children.larger_than,
+                    term,
+                    index
+                )
+
+            else:
+                if term == "":
+                    node.terminates = True
+
+                elif index + 1 == len(term):
+                    node.terminates = True
+
+                else:
+                    node.children.equals = _insert(
+                        node.children.equals,
+                        term,
+                        index + 1
+                    )
+
+            return node
+
+        self.root = _insert(self.root, term, 0)
+        return True
