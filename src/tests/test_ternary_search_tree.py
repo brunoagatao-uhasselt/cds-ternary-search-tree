@@ -17,6 +17,29 @@ class TestTernarySearchTree(unittest.TestCase):
 
         self.non_insertion_words = words
 
+    def test_tree_insert_single_word(self) -> None:
+        tst = TernarySearchTree()
+        assert len(tst) == 0
+
+        tst.insert("word")
+        assert len(tst) == 1
+        assert tst.all_strings() == ["word"]
+
+    def test_tree_insert_duplicate_word(self) -> None:
+        tst = TernarySearchTree()
+        assert len(tst) == 0
+
+        tst.insert("word")
+        tst.insert("word")
+        assert len(tst) == 1
+        assert tst.all_strings() == ["word"]
+
+    def test_tree_insert_empty_string(self) -> None:
+        tst = TernarySearchTree()
+        tst.insert("")
+        assert len(tst) == 1
+        assert tst.all_strings() == [""]
+
     def test_tree_search_word_inserted_entry(self) -> None:
         tst = TernarySearchTree()
         tst.insert("word")
@@ -67,6 +90,17 @@ class TestTernarySearchTree(unittest.TestCase):
         unique_words = set(self.insertion_words)
         assert len(tst) == len(unique_words)
 
+    def test_tree_all_strings(self) -> None:
+        tst = TernarySearchTree()
+        assert tst.all_strings() == []
+
+        words = ["this", "list", "is", "not", "sorted"]
+
+        for word in words:
+            tst.insert(word)
+
+        assert tst.all_strings() == sorted(words)
+
     def test_tree_search_word_extensive(self) -> None:
         tst = TernarySearchTree()
         unique_words = set(self.insertion_words)
@@ -111,3 +145,12 @@ class TestTernarySearchTree(unittest.TestCase):
 
         for word in self.non_insertion_words:
             assert tst.search(word, exact=False) is False
+
+    def test_tree_all_strings_extensive_sorted(self) -> None:
+        tst = TernarySearchTree()
+        unique_words = set(self.insertion_words)
+
+        for word in self.insertion_words:
+            tst.insert(word)
+
+        assert tst.all_strings() == sorted(unique_words)
