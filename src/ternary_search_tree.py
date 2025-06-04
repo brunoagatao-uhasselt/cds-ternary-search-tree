@@ -81,6 +81,29 @@ class TernarySearchTree:
         render(self.root)
         return "\n".join(lines) if lines else "<empty tree>"
 
+    def __len__(self) -> int:
+        """
+        Calculates the number of complete strings stored in the ternary search
+        tree.
+
+        A string is considered stored if it terminates at a node marked as a
+        terminal node.
+
+        Returns:
+            int: the number of distinct strings stored in the tree.
+        """
+        def count(node: TreeNode | None):
+            if node is None:
+                return 0
+
+            total = int(node.terminates)
+            total += count(node.children.less_than)
+            total += count(node.children.equals)
+            total += count(node.children.larger_than)
+            return total
+
+        return count(self.root)
+
     def insert(self, term: str) -> bool:
         """
         Inserts a string into the ternary search tree.
@@ -135,3 +158,41 @@ class TernarySearchTree:
 
         self.root = _insert(self.root, term, 0)
         return True
+
+    def search(self, term: str, exact: bool = False) -> bool:
+        """
+        Searches for a string or prefix in the ternary search tree.
+
+        Args:
+            term (str): the string to search for.
+            exact (bool): if True, checks for a full match (must terminate at
+            the final node). If False, checks for a valid prefix match.
+
+        Returns:
+            bool: True if the term or prefix exists in the tree, False
+            otherwise.
+        """
+        def _search(node: TreeNode | None, index: int) -> bool:
+            if node is None:
+                return False
+
+            if term == "":
+                character = ""
+            else:
+                character = term[index]
+
+            if character < node.character:
+                return _search(node.children.less_than, index)
+            elif character > node.character:
+                return _search(node.children.larger_than, index)
+            else:
+                if term == "":
+                    return True
+                elif index == len(term) - 1:
+                    return node.terminates if exact else True
+                return _search(node.children.equals, index + 1)
+
+        if term == "" and not exact:
+            return bool(len(self))
+
+        return _search(self.root, 0)
