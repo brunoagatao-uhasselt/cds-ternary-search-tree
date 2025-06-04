@@ -53,6 +53,34 @@ class TernarySearchTree:
     def root(self, node: TreeNode | None):
         self._root = node
 
+    def __repr__(self) -> str:
+        """
+        Returns an ASCII representation of the ternary search tree.
+
+        Each node is displayed with its character and '*' if it terminates a
+        word. Children are shown with labeled branches: < (less), = (equal),
+        and > (greater).
+
+        Returns:
+            str: the tree structure as a string.
+        """
+        lines = []
+
+        def render(node: TreeNode | None, prefix: str = "", label: str = ""):
+            if node is None:
+                return
+
+            node_repr = node.character + ("*" if node.terminates else "")
+            lines.append(f"{prefix}{label}{node_repr}")
+            indent = prefix + ("│  " if label else "   ")
+
+            render(node.children.less_than, indent, "├─< ")
+            render(node.children.equals, indent, "├─= ")
+            render(node.children.larger_than, indent, "└─> ")
+
+        render(self.root)
+        return "\n".join(lines) if lines else "<empty tree>"
+
     def __len__(self) -> int:
         """
         Calculates the number of complete strings stored in the ternary search
