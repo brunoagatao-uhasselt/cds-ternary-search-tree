@@ -196,3 +196,32 @@ class TernarySearchTree:
             return bool(len(self))
 
         return _search(self.root, 0)
+
+    def all_strings(self) -> list[str]:
+        """
+        Retrieves all complete strings currently stored in the ternary search
+        tree.
+
+        This performs a full traversal of the tree and collects strings that
+        terminate at valid nodes.
+
+        Returns:
+            list[str]: a list of all strings stored in the tree.
+        """
+        result = []
+
+        def collect(node: TreeNode | None, path: str):
+            if node is None:
+                return
+
+            collect(node.children.less_than, path)
+            new_path = path + node.character
+
+            if node.terminates:
+                result.append(new_path)
+
+            collect(node.children.equals, new_path)
+            collect(node.children.larger_than, path)
+
+        collect(self.root, "")
+        return result
