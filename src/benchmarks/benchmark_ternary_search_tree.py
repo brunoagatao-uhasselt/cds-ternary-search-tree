@@ -50,6 +50,7 @@ def generate_individual_plot(func):
             print(f"unable to create plot for {func.__name__}")
 
         return results
+
     return wrap
 
 
@@ -97,6 +98,7 @@ def generate_aggregate_plot(func):
             print(f"unable to create plot for {func.__name__}")
 
         return results
+
     return wrap
 
 
@@ -263,8 +265,106 @@ class BenchmarkTernaryTestTree:
 
         return results
 
+    @generate_individual_plot
+    def search_best_case(
+        self,
+        steps: int = DEFAULT_STEPS
+    ) -> dict[int, list[int]]:
+        results = {}
+
+        limit = math.log10(len(self.sorted_words))
+        sizes = np.logspace(1, limit, steps)
+
+        for size in sizes:
+            words = self.sorted_words[:int(size)]
+            sample_results = results[len(words)] = []
+
+            # words should be in median order for best-case performance
+            # balanced tree
+            for _ in range(steps):
+                with Timer("search_best_case", int(size), sample_results):
+                    for word in words:
+                        self.median_populated_tree.search(word)
+
+        return results
+
+    @generate_individual_plot
+    def search_average_case(
+        self,
+        steps: int = DEFAULT_STEPS
+    ) -> dict[int, list[int]]:
+        results = {}
+
+        limit = math.log10(len(self.sorted_words))
+        sizes = np.logspace(1, limit, steps)
+
+        for size in sizes:
+            words = self.sorted_words[:int(size)]
+            sample_results = results[len(words)] = []
+
+            # words should be in random order for average-case performance
+            for _ in range(steps):
+                with Timer("search_best_case", int(size), sample_results):
+                    for word in words:
+                        self.shuffled_populated_tree.search(word)
+
+        return results
+
+    @generate_individual_plot
+    def search_worst_case(
+        self,
+        steps: int = DEFAULT_STEPS
+    ) -> dict[int, list[int]]:
+        results = {}
+
+        limit = math.log10(len(self.sorted_words))
+        sizes = np.logspace(1, limit, steps)
+
+        for size in sizes:
+            words = self.sorted_words[:int(size)]
+            sample_results = results[len(words)] = []
+
+            # words should be sorted alphabetically for worst-case performance
+            # unbalanced tree
+            for _ in range(steps):
+                with Timer("search_best_case", int(size), sample_results):
+                    for word in words:
+                        self.sorted_populated_tree.search(word)
+
+        return results
+
+    @generate_aggregate_plot
+    def search_all_cases(
+        self, steps: int = DEFAULT_STEPS
+    ) -> dict[str, dict[int, list[int]]]:
+        results = {"best": {}, "average": {}, "worst": {}}
+
+        cases: dict[str, TernarySearchTree] = {
+            "best": self.median_populated_tree,
+            "average": self.shuffled_populated_tree,
+            "worst": self.sorted_populated_tree,
+        }
+
+        limit = math.log10(len(self.sorted_words))
+        sizes = np.logspace(1, limit, steps)
+
+        for case in cases:
+            for size in sizes:
+                words = self.sorted_words[:int(size)]
+                sample_results = results[case][len(words)] = []
+
+                for _ in range(steps):
+                    with Timer(
+                        f"search_{case}_case", int(size), sample_results
+                    ):
+                        for word in words:
+                            cases[case].search(word)
+
+        return results
+
 
 benchmark = BenchmarkTernaryTestTree()
 
 if __name__ == "__main__":
     benchmark.insert_all_cases()
+    benchmark.search_all_cases()
