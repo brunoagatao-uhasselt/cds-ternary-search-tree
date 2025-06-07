@@ -90,6 +90,43 @@ To run all tests:
 python -m unittest discover -s src/tests
 ```
 
+### Benchmarking
+
+Benchmarking scripts are in `src/benchmarks/`:
+
+- `benchmark_ternary_search_tree.py`: measures insert/search times for increasing input sizes;
+- `jobscript.slurm`: job script for KU Leuven's HPC cluster.
+
+Test datasets (e.g., `insert_words.txt`, `not_insert_words.txt`) are found in `data/search_trees/`.
+
+To run an individual benchmark method:
+
+```bash
+python -c "from src.benchmarks.benchmark_ternary_search_tree import benchmark; benchmark.<method_name>()"
+```
+
+To run all benchmarks at once:
+
+```bash
+python -m src.benchmarks.benchmark_ternary_search_tree
+```
+
+#### Results
+
+The benchmarks were run on the KU Leuven HPC infrastructure using realistic word lists (`corncob_lowercase.txt`). Results show a clear distinction between best, average, and worst-case scenarios.
+
+Plots and logs from the benchmark runs are included in the repository.
+
+## Conclusions
+
+The theoretical complexity analysis aligns with the benchmarking results:
+
+- **Best case** (balanced insert order) achieves near-linear scaling;
+- **Average case** (random word order) performs sub-logarithmically per character;
+- **Worst case** (sorted word input) shows quadratic growth due to tree imbalance.
+
+This confirms the sensitivity of TSTs to insertion order and validates the analysis through real-world performance testing.
+
 ## Contributors
 
 This project was developed as part of a team assignment. Collaboration, code contributions, and commit history are documented in the GitHub repository.
