@@ -1,0 +1,7 @@
+name: cds-ternary-search-tree
+channels:
+  - defaults
+dependencies:
+  - matplotlib=3.10
+  - numpy=2.2
+  - python=3.12
