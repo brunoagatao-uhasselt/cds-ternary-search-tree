@@ -9,16 +9,24 @@ This project implements a Ternary Search Tree (TST) as part of the `Concepts of 
 
 The goal is to understand, implement, and empirically evaluate the efficiency of TSTs for string storage and retrieval.
 
+[Conventional commits](https://www.conventionalcommits.org/) have been used as a baseline throughout development.
+
 ## Software Requirements
 
-Python 3.10 or above is required to run the project code. A `conda` installation is also recommended - we used it throughout the project as Python's package and environment manager.
+Python 3.10 or above is required to run the project code. A `conda` installation is also recommended - we used it throughout development to manage Python packages and environments.
 
 The main TST implementation and tests use only Python's standard library. However, the benchmarking code depends on:
 
 - `matplotlib` for plotting;
 - `numpy` for numerical operations.
 
-You can install them using:
+Create a new conda environment containing all dependencies:
+
+```bash
+conda env create -f environment.yml
+```
+
+, or install the required libs directly into your active environment:
 
 ```bash
 conda install matplotlib numpy
@@ -73,8 +81,6 @@ At each character level, it compares the character against the current node and 
 | `all_strings` | O(kL + H)        | Output list + recursion stack.                       |
 
 , where `H` = height of the tree (can be up to `n` per word).
-
-TSTs support prefix search more naturally than BSTs.
 
 ### Testing
 
