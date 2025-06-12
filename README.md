@@ -9,16 +9,24 @@ This project implements a Ternary Search Tree (TST) as part of the `Concepts of 
 
 The goal is to understand, implement, and empirically evaluate the efficiency of TSTs for string storage and retrieval.
 
+[Conventional commits](https://www.conventionalcommits.org/) have been used as a baseline throughout development.
+
 ## Software Requirements
 
-Python 3.10 or above is required to run the project code. A `conda` installation is also recommended - we used it throughout the project as Python's package and environment manager.
+Python 3.10 or above is required to run the project code. A `conda` installation is also recommended - we used it throughout development to manage Python packages and environments.
 
 The main TST implementation and tests use only Python's standard library. However, the benchmarking code depends on:
 
 - `matplotlib` for plotting;
 - `numpy` for numerical operations.
 
-You can install them using:
+Create a new conda environment containing all dependencies:
+
+```bash
+conda env create -f environment.yml
+```
+
+, or install the required libs directly into your active environment:
 
 ```bash
 conda install matplotlib numpy
@@ -74,8 +82,6 @@ At each character level, it compares the character against the current node and 
 
 , where `H` = height of the tree (can be up to `n` per word).
 
-TSTs support prefix search more naturally than BSTs.
-
 ### Testing
 
 Unit tests are located in `src/tests/test_ternary_search_tree.py`. They validate:
@@ -89,6 +95,43 @@ To run all tests:
 ```bash
 python -m unittest discover -s src/tests
 ```
+
+### Benchmarking
+
+Benchmarking scripts are in `src/benchmarks/`:
+
+- `benchmark_ternary_search_tree.py`: measures insert/search times for increasing input sizes;
+- `jobscript.slurm`: job script for KU Leuven's HPC cluster.
+
+Test datasets (e.g., `insert_words.txt`, `not_insert_words.txt`) are found in `data/search_trees/`.
+
+To run an individual benchmark method:
+
+```bash
+python -c "from src.benchmarks.benchmark_ternary_search_tree import benchmark; benchmark.<method_name>()"
+```
+
+To run all benchmarks at once:
+
+```bash
+python -m src.benchmarks.benchmark_ternary_search_tree
+```
+
+#### Results
+
+The benchmarks were run on the KU Leuven HPC infrastructure using realistic word lists (`corncob_lowercase.txt`). Results show a clear distinction between best, average, and worst-case scenarios.
+
+Plots and logs from the benchmark runs are included in the repository.
+
+## Conclusions
+
+The theoretical complexity analysis aligns with the benchmarking results:
+
+- **Best case** (balanced insert order) achieves near-linear scaling;
+- **Average case** (random word order) performs sub-logarithmically per character;
+- **Worst case** (sorted word input) shows quadratic growth due to tree imbalance.
+
+This confirms the sensitivity of TSTs to insertion order and validates the analysis through real-world performance testing.
 
 ## Contributors
 
