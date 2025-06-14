@@ -9,7 +9,7 @@ class TreeNodeChildren:
 
 
 class TreeNode:
-    def __init__(self, character: str):
+    def __init__(self, character: str) -> None:
         self.character = character
         self.terminates = False
         self.children = TreeNodeChildren()
@@ -19,7 +19,7 @@ class TreeNode:
         return self._character
 
     @character.setter
-    def character(self, character: str):
+    def character(self, character: str) -> None:
         if len(character) > 1:  # allow empty string
             raise ValueError("input must be a character string")
         self._character = character
@@ -29,7 +29,7 @@ class TreeNode:
         return self._terminates
 
     @terminates.setter
-    def terminates(self, terminates: bool):
+    def terminates(self, terminates: bool) -> None:
         self._terminates = terminates
 
     @property
@@ -66,7 +66,7 @@ class TernarySearchTree:
         """
         lines = []
 
-        def render(node: TreeNode | None, prefix: str = "", label: str = ""):
+        def render(node: TreeNode | None, prefix: str = "", label: str = "") -> str | None:
             if node is None:
                 return
 
@@ -92,7 +92,7 @@ class TernarySearchTree:
         Returns:
             int: the number of distinct strings stored in the tree.
         """
-        def count(node: TreeNode | None):
+        def count(node: TreeNode | None) -> int:
             if node is None:
                 return 0
 
@@ -117,7 +117,7 @@ class TernarySearchTree:
             bool: True if the string was inserted successfully, False
             otherwise.
         """
-        def _insert(node, term, index):
+        def _insert(node: TreeNode | None, term: str, index: int) -> TreeNode:
             if term == "":
                 character = ""
             else:
@@ -210,7 +210,7 @@ class TernarySearchTree:
         """
         result = []
 
-        def collect(node: TreeNode | None, path: str):
+        def collect(node: TreeNode | None, path: str) -> None:
             if node is None:
                 return
 
