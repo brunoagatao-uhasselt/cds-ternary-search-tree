@@ -141,7 +141,7 @@ class BenchmarkTernaryTestTree:
             self.shuffled_populated_tree.insert(word)
 
         # median ordered words
-        self.median_ordered_words = self._median_order(words)
+        self.median_ordered_words = self._median_order(self.sorted_words)
         self.median_populated_tree = TernarySearchTree()
         for word in self.median_ordered_words:
             self.median_populated_tree.insert(word)
